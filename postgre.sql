@@ -32,6 +32,7 @@ CREATE TABLE users (
     password_hash VARCHAR(255) NOT NULL,
     role user_role NOT NULL,
     is_email_verified BOOLEAN DEFAULT FALSE,
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -65,6 +66,7 @@ CREATE TABLE courses (
     duration INT,
     duration_unit duration_unit_type,
     difficulty VARCHAR(50),
+    is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
