@@ -14,11 +14,11 @@ CREATE TYPE user_role AS ENUM ('student', 'teacher', 'admin');
 
 -- enum untuk payment method
 DROP TYPE IF EXISTS payment_method_type;
-CREATE TYPE payment_method_type AS ENUM ('credit_card', 'paypal', 'bank_transfer');
+CREATE TYPE payment_method_type AS ENUM ('credit_card', 'bank_transfer');
 
 -- enum untuk token type
 DROP TYPE IF EXISTS token_type;
-CREATE TYPE token_type AS ENUM ('access', 'refresh', 'verification');
+CREATE TYPE token_type AS ENUM ('access', 'refresh', 'resetPassword','verifyEmail' );
 
 -- enum untuk satuan durasi
 DROP TYPE IF EXISTS duration_unit_type;
@@ -27,10 +27,10 @@ CREATE TYPE duration_unit_type AS ENUM ('hour', 'minute', 'day');
 -- Tabel users
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    full_name VARCHAR(255) NOT NULL,
+    name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    role user_role NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role user_role DEFAULT 'student',
     is_email_verified BOOLEAN DEFAULT FALSE,
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +40,7 @@ CREATE TABLE users (
 -- Tabel payments
 CREATE TABLE payments (
     payment_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     amount DECIMAL(10, 2) NOT NULL,
     payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     method payment_method_type NOT NULL
@@ -49,7 +49,7 @@ CREATE TABLE payments (
 -- Tabel auth_tokens
 CREATE TABLE auth_tokens (
     token_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     token TEXT NOT NULL,
     is_blacklisted BOOLEAN DEFAULT FALSE,
     expires_at TIMESTAMP NOT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE auth_tokens (
 -- Tabel courses
 CREATE TABLE courses (
     course_id SERIAL PRIMARY KEY,
-    teacher_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    teacher_id INT REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     title VARCHAR(255) NOT NULL,
     description TEXT,
     duration INT,
@@ -74,8 +74,8 @@ CREATE TABLE courses (
 -- Tabel discussions
 CREATE TABLE discussions (
     discussion_id SERIAL PRIMARY KEY,
-    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,
-    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE NOT NULL,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     message TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -83,7 +83,7 @@ CREATE TABLE discussions (
 -- Tabel course_chapters
 CREATE TABLE course_chapters (
     chapter_id SERIAL PRIMARY KEY,
-    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE,
+    course_id INT REFERENCES courses(course_id) ON DELETE CASCADE NOT NULL,
     chapter_order INT NOT NULL,
     title VARCHAR(255) NOT NULL
 );
@@ -91,7 +91,7 @@ CREATE TABLE course_chapters (
 -- Tabel chapter_contents
 CREATE TABLE chapter_contents (
     content_id SERIAL PRIMARY KEY,
-    section_id INT REFERENCES course_chapters(chapter_id) ON DELETE CASCADE,
+    section_id INT REFERENCES course_chapters(chapter_id) ON DELETE CASCADE NOT NULL,
     content_order INT NOT NULL,
     title VARCHAR(255) NOT NULL,
     duration INT,
@@ -103,7 +103,7 @@ CREATE TABLE chapter_contents (
 -- Tabel memberships
 CREATE TABLE memberships (
     membership_id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+    user_id INT REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     tier VARCHAR(50) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL
