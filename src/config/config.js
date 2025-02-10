@@ -9,6 +9,8 @@ const envVarsSchema = Joi.object()
     NODE_ENV: Joi.string()
       .valid("production", "development", "test")
       .required(),
+    FRONTEND_URL: Joi.string().required(),
+    BACKEND_URL: Joi.string().required(),
     PORT: Joi.number().default(3000),
     PG_USER: Joi.string().required().description("PostgreSQL username"),
     PG_HOST: Joi.string().required().description("PostgreSQL host"),
@@ -48,6 +50,8 @@ if (error) {
 
 const config = {
   env: envVars.NODE_ENV,
+  frontendUrl: envVars.FRONTEND_URL,
+  backendUrl: envVars.BACKEND_URL,
   port: envVars.PORT,
   postgre: {
     user: envVars.PG_USER,
@@ -68,9 +72,13 @@ const config = {
     smtp: {
       host: envVars.SMTP_HOST,
       port: envVars.SMTP_PORT,
+      secure: false,
       auth: {
         user: envVars.SMTP_USERNAME,
         pass: envVars.SMTP_PASSWORD,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     },
     from: envVars.EMAIL_FROM,
