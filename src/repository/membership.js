@@ -38,7 +38,6 @@ export const addMembership = async (userId, duration) => {
       ];
 
       const { rows } = await pool.query(updateMembershipQuery, values);
-      console.log("_______", currentMembership);
 
       return rows[0];
     }

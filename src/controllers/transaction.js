@@ -48,12 +48,10 @@ export const checkTransactionStatus = catchAsync(async (req, res) => {
         transaction.quantity *
         membership[transaction.membership_duration.toUpperCase()].duration;
 
-      // console.log("transaction : ", transaction);
       const newMembership = await MembershipService.addMembership(
         userId,
         duration
       );
-      console.log("newMembership : ", newMembership);
 
       await res.status(httpStatus.OK).send("Transaction succeeded.");
     }

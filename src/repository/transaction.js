@@ -1,4 +1,5 @@
 import pool from "../config/postgre.js";
+import { transactionStatusType } from "../config/transaction.js";
 
 export const createTransaction = async (
   orderId,
@@ -32,7 +33,7 @@ export const updateTransaction = async (orderId, updatedData) => {
     order += 1;
   }
 
-  query += ` WHERE order_id = $${order}`;
+  query += ` WHERE order_id = $${order} AND status = 'pending'`;
   values.push(orderId);
 
   query += " RETURNING *";
