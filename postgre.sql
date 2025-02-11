@@ -1,5 +1,5 @@
 -- Hapus tabel 
-DROP TABLE IF EXISTS payments CASCADE;
+DROP TABLE IF EXISTS transactions CASCADE;
 DROP TABLE IF EXISTS auth_tokens CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS courses CASCADE;
@@ -12,10 +12,6 @@ DROP TABLE IF EXISTS memberships CASCADE;
 DROP TYPE IF EXISTS user_role;
 CREATE TYPE user_role AS ENUM ('student', 'teacher', 'admin');
 
--- enum untuk payment method
-DROP TYPE IF EXISTS payment_method_type;
-CREATE TYPE payment_method_type AS ENUM ('credit_card', 'bank_transfer');
-
 -- enum untuk token type
 DROP TYPE IF EXISTS token_type;
 CREATE TYPE token_type AS ENUM ('access', 'refresh', 'resetPassword','verifyEmail' );
@@ -23,6 +19,10 @@ CREATE TYPE token_type AS ENUM ('access', 'refresh', 'resetPassword','verifyEmai
 -- enum untuk satuan durasi
 DROP TYPE IF EXISTS duration_unit_type;
 CREATE TYPE duration_unit_type AS ENUM ('hour', 'minute', 'day');
+
+-- enum untuk status transaksi
+DROP TYPE IF EXISTS transaction_status_type;
+CREATE TYPE transaction_status_type AS ENUM ('pending', 'completed', 'failed', 'refunded');
 
 -- Tabel users
 CREATE TABLE users (
@@ -37,13 +37,17 @@ CREATE TABLE users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabel payments
-CREATE TABLE payments (
-    payment_id SERIAL PRIMARY KEY,
+-- Tabel transactions
+CREATE TABLE transactions (
+    order_id TEXT PRIMARY KEY NOT NULL,
     user_id INT REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
-    amount DECIMAL(10, 2) NOT NULL,
-    payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    method payment_method_type NOT NULL
+    amount INT NOT NULL,
+    payment_url TEXT NOT NULL,
+    transaction_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    transaction_id TEXT,
+    status transaction_status_type DEFAULT 'pending',
+    method VARCHAR(50),
+    settlement_time TIMESTAMP
 );
 
 -- Tabel auth_tokens
