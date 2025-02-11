@@ -1,6 +1,8 @@
 import express from "express";
 import AuthRoute from "./auth.js";
 import UserRoute from "./user.js";
+import TransactionRoute from "./transaction.js";
+import WebhookRoute from "./webhook.js";
 import config from "../../config/config.js";
 
 const router = express.Router();
@@ -13,6 +15,14 @@ const defaultRoutes = [
   {
     path: "/users",
     route: UserRoute,
+  },
+  {
+    path: "/transactions",
+    route: TransactionRoute,
+  },
+  {
+    path: "/webhook",
+    route: WebhookRoute,
   },
 ];
 
