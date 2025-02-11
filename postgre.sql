@@ -24,6 +24,10 @@ CREATE TYPE duration_unit_type AS ENUM ('hour', 'minute', 'day');
 DROP TYPE IF EXISTS transaction_status_type;
 CREATE TYPE transaction_status_type AS ENUM ('pending', 'completed', 'failed', 'refunded');
 
+-- enum untuk status transaksi
+DROP TYPE IF EXISTS membership_duration_type;
+CREATE TYPE membership_duration_type AS ENUM ('monthly', 'yearly');
+
 -- Tabel users
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
@@ -42,6 +46,8 @@ CREATE TABLE transactions (
     order_id TEXT PRIMARY KEY NOT NULL,
     user_id INT REFERENCES users(user_id) ON DELETE CASCADE NOT NULL,
     amount INT NOT NULL,
+    quantity INT NOT NULL,
+    membership_duration membership_duration_type NOT NULL,
     payment_url TEXT NOT NULL,
     transaction_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     transaction_id TEXT,

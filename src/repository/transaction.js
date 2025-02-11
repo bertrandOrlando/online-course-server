@@ -4,12 +4,14 @@ export const createTransaction = async (
   orderId,
   userId,
   amount,
-  paymentUrl
+  paymentUrl,
+  quantity,
+  type
 ) => {
   const query =
-    "INSERT INTO transactions (order_id, user_id, amount, payment_url) VALUES ($1, $2, $3, $4) RETURNING *";
+    "INSERT INTO transactions (order_id, user_id, amount, payment_url, quantity, membership_duration) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *";
 
-  const values = [orderId, userId, amount, paymentUrl];
+  const values = [orderId, userId, amount, paymentUrl, quantity, type];
 
   const { rows } = await pool.query(query, values);
 

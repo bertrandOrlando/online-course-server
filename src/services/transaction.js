@@ -45,7 +45,9 @@ export const createTransaction = async (user, item) => {
     orderId,
     user.user_id,
     amount,
-    paymentUrl
+    paymentUrl,
+    item.quantity,
+    item.type
   );
 
   return transaction;
