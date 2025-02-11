@@ -37,6 +37,7 @@ const envVarsSchema = Joi.object()
     EMAIL_FROM: Joi.string().description(
       "the from field in the emails sent by the app"
     ),
+    MIDTRANS_SERVER_KEY: Joi.string().description("midtrans server API key"),
   })
   .unknown();
 
@@ -82,6 +83,9 @@ const config = {
       },
     },
     from: envVars.EMAIL_FROM,
+  },
+  midtrans: {
+    serverKey: envVars.MIDTRANS_SERVER_KEY,
   },
 };
 
