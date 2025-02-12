@@ -2,6 +2,7 @@ import express from "express";
 import AuthRoute from "./auth.js";
 import UserRoute from "./user.js";
 import TransactionRoute from "./transaction.js";
+import CourseRoute from "./course.js";
 import WebhookRoute from "./webhook.js";
 import config from "../../config/config.js";
 
@@ -19,6 +20,10 @@ const defaultRoutes = [
   {
     path: "/transactions",
     route: TransactionRoute,
+  },
+  {
+    path: "/courses",
+    route: CourseRoute,
   },
   {
     path: "/webhook",
